@@ -53,7 +53,7 @@ export interface VisitorDTO {
 export class Backend {
 
   
-  private baseUrl = 'https://portafoliohojadevida.onrender.com';
+  private baseUrl = 'https://portafoliohojadevida.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
