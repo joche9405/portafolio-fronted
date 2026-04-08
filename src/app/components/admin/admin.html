@@ -1,0 +1,193 @@
+<ng-container *ngIf="profile; else loadingTemplate">
+  <div class="admin-container">
+
+    <!-- HEADER MODERNO -->
+    <header class="admin-header">
+      <div class="header-left">
+        <h1>Panel de Administración</h1>
+        <div class="profile-selector">
+          <span class="label">Perfil activo:</span>
+          <div class="selector-wrapper">
+            <select [(ngModel)]="perfilSeleccionado" (change)="seleccionarPerfil(perfilSeleccionado)">
+              <option *ngFor="let tipo of perfilesDisponibles" [value]="tipo">{{ tipo | uppercase }}</option>
+            </select>
+            <button (click)="crearNuevoPerfil()" class="btn-new">+ Nuevo Perfil</button>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="visitors">
+          <span class="visitor-label">Visitantes</span>
+          <span class="visitor-count">{{ visitorCount }}</span>
+        </div>
+        <button (click)="updateProfile()" class="btn-save">
+          <span>💾</span> Guardar Cambios
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL: 2 COLUMNAS -->
+    <div class="admin-grid">
+
+      <!-- COLUMNA IZQUIERDA: DATOS GENERALES + HABILIDADES + SEGURIDAD -->
+      <div class="left-column">
+
+        <!-- Tarjeta: Datos personales -->
+        <div class="card">
+          <div class="card-header">
+            <h2>👤 Datos personales</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-row two-cols">
+              <div class="input-group">
+                <label>Nombre</label>
+                <input [(ngModel)]="profile.nombre" placeholder="Ej. José Luis" type="text">
+              </div>
+              <div class="input-group">
+                <label>Apellidos</label>
+                <input [(ngModel)]="profile.apellidos" placeholder="Ej. Tapia Simanca" type="text">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Resumen profesional</label>
+              <textarea [(ngModel)]="profile.resumen" rows="4" placeholder="Breve descripción de tu perfil..."></textarea>
+            </div>
+            <div class="input-group">
+              <label>URL de fotografía</label>
+              <input [(ngModel)]="profile.fotoUrl" placeholder="https://ejemplo.com/mi-foto.jpg" type="text">
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Habilidades -->
+        <div class="card">
+          <div class="card-header">
+            <h2>🛠️ Habilidades técnicas</h2>
+          </div>
+          <div class="card-body">
+            <div class="add-skill">
+              <input #skillInput placeholder="Nueva habilidad (ej. Angular)" type="text">
+              <button (click)="addSkill(skillInput.value); skillInput.value=''">Agregar</button>
+            </div>
+            <div class="skills-list">
+              <span *ngFor="let s of profile.skills; let i = index" class="skill-badge">
+                {{ s }}
+                <button (click)="removeSkill(i)" class="remove-skill">✕</button>
+              </span>
+              <div *ngIf="!profile.skills?.length" class="empty-state">Aún no hay habilidades agregadas</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Seguridad -->
+        <div class="card">
+          <div class="card-header">
+            <h2>🔒 Seguridad</h2>
+          </div>
+          <div class="card-body">
+            <button (click)="promptPasswordChange()" class="btn-outline">Cambiar contraseña de administrador</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: PROYECTOS, EXPERIENCIA, EDUCACIÓN -->
+      <div class="right-column">
+
+        <!-- Tarjeta: Proyectos -->
+        <div class="card">
+          <div class="card-header">
+            <h2>📂 Proyectos</h2>
+            <button (click)="showProjectForm = !showProjectForm" [disabled]="!profile.id" class="btn-icon">
+              {{ showProjectForm ? 'Cancelar' : '+ Nuevo proyecto' }}
+            </button>
+          </div>
+          <div class="card-body">
+            <!-- Formulario nuevo proyecto -->
+            <div *ngIf="showProjectForm" class="new-project-form">
+              <input #titleInput placeholder="Nombre del proyecto" type="text">
+              <textarea #descInput placeholder="Descripción del proyecto" rows="2"></textarea>
+              <input #urlInput placeholder="URL (opcional)" type="text">
+              <button (click)="createProject(titleInput.value, descInput.value); titleInput.value=''; descInput.value=''; urlInput.value=''; showProjectForm=false" class="btn-primary">Guardar proyecto</button>
+            </div>
+
+            <!-- Lista de proyectos -->
+            <div class="projects-list">
+              <div *ngFor="let proj of projects" class="project-item">
+                <div *ngIf="editingProjectId !== proj.id" class="project-view">
+                  <div class="project-info">
+                    <h3>{{ proj.nombre }}</h3>
+                    <p>{{ proj.descripcion }}</p>
+                    <a *ngIf="proj.url" [href]="proj.url" target="_blank" class="project-link">Ver proyecto →</a>
+                  </div>
+                  <div class="project-actions">
+                    <button (click)="startEdit(proj)" class="edit-btn">Editar</button>
+                    <button (click)="deleteProject(proj.id!)" class="delete-btn">Eliminar</button>
+                  </div>
+                </div>
+                <div *ngIf="editingProjectId === proj.id" class="project-edit">
+                  <input [(ngModel)]="proj.nombre" type="text">
+                  <textarea [(ngModel)]="proj.descripcion" rows="2"></textarea>
+                  <div class="edit-actions">
+                    <button (click)="updateProject(proj)" class="save-edit">Guardar</button>
+                    <button (click)="editingProjectId = null" class="cancel-edit">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="projects.length === 0" class="empty-state">No hay proyectos registrados</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Experiencia laboral -->
+        <div class="card">
+          <div class="card-header">
+            <h2>💼 Experiencia laboral</h2>
+            <button (click)="addExperience()" class="btn-icon">+ Añadir</button>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let exp of profile.experiencia; let i = index" class="dynamic-item">
+              <div class="item-header">
+                <span class="item-title">{{ exp.cargo || 'Nuevo cargo' }}</span>
+                <button (click)="removeExperience(i)" class="remove-item">Eliminar</button>
+              </div>
+              <div class="item-fields">
+                <input [(ngModel)]="exp.cargo" placeholder="Cargo">
+                <input [(ngModel)]="exp.empresa" placeholder="Empresa">
+              </div>
+            </div>
+            <div *ngIf="!profile.experiencia?.length" class="empty-state">Sin experiencia registrada</div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Educación -->
+        <div class="card">
+          <div class="card-header">
+            <h2>🎓 Educación</h2>
+            <button (click)="addEducation()" class="btn-icon">+ Añadir</button>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let edu of profile.educacion; let i = index" class="dynamic-item">
+              <div class="item-header">
+                <span class="item-title">{{ edu.titulo || 'Nuevo título' }}</span>
+                <button (click)="removeEducation(i)" class="remove-item">Eliminar</button>
+              </div>
+              <div class="item-fields">
+                <input [(ngModel)]="edu.titulo" placeholder="Título obtenido">
+                <input [(ngModel)]="edu.institucion" placeholder="Institución">
+              </div>
+            </div>
+            <div *ngIf="!profile.educacion?.length" class="empty-state">Sin educación registrada</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <p>Sincronizando datos con el servidor...</p>
+  </div>
+</ng-template>

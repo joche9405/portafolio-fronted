@@ -1,0 +1,84 @@
+<div *ngIf="profile as p; else loading" class="profile-container">
+  
+  <!-- Encabezado minimalista -->
+  <div class="profile-header">
+    <div class="avatar-wrapper">
+      <img [src]="p.fotoUrl || 'https://ui-avatars.com/api/?background=0D9488&color=fff&name=' + p.nombre" 
+           alt="avatar" class="avatar">
+    </div>
+    <h1>{{ p.nombre }} {{ p.apellidos }}</h1>
+    <p class="resumen">{{ p.resumen }}</p>
+    <div class="ubicacion">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      {{ p.direccion }}
+    </div>
+  </div>
+
+  <!-- Grid de dos columnas -->
+  <div class="profile-grid">
+    
+    <!-- Columna izquierda -->
+    <div class="grid-col">
+      
+      <!-- Skills -->
+      <div class="card">
+        <h2>Habilidades</h2>
+        <div class="skills-list">
+          <span *ngFor="let skill of p.skills || []" class="skill">{{ skill }}</span>
+        </div>
+      </div>
+
+      <!-- Educación -->
+      <div class="card">
+        <h2>Educación</h2>
+        <div *ngFor="let edu of p.educacion || []" class="entry">
+          <div class="entry-header">
+            <h3>{{ edu.titulo }}</h3>
+            <span class="date">{{ edu.fechaInicio }} – {{ edu.fechaFin }}</span>
+          </div>
+          <p class="institution">{{ edu.institucion }}</p>
+          <p class="description">{{ edu.descripcion }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha -->
+    <div class="grid-col">
+      
+      <!-- Experiencia -->
+      <div class="card">
+        <h2>Experiencia</h2>
+        <div *ngFor="let exp of p.experiencia || []" class="entry">
+          <div class="entry-header">
+            <h3>{{ exp.cargo }}</h3>
+            <span class="date">{{ exp.fechaInicio }} – {{ exp.fechaFin }}</span>
+          </div>
+          <p class="company">{{ exp.empresa }}</p>
+          <p class="description">{{ exp.descripcion }}</p>
+        </div>
+      </div>
+
+      <!-- Proyectos -->
+      <div class="card">
+        <h2>Proyectos destacados</h2>
+        <div *ngFor="let proj of projects" class="project-item">
+          <h3>{{ proj.nombre }}</h3>
+          <p>{{ proj.descripcion }}</p>
+          <a *ngIf="proj.url" [href]="proj.url" target="_blank" class="project-link">
+            Ver proyecto →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-state">
+    <div class="loader"></div>
+    <p>Cargando perfil...</p>
+  </div>
+</ng-template>

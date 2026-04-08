@@ -1,0 +1,46 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-900 px-4">
+  <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+    
+    <div class="bg-blue-600 h-2 w-full"></div>
+    
+    <div class="p-8">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-gray-800">Admin Login</h2>
+        <p class="text-gray-500 mt-2">Ingresa tus credenciales para gestionar el portafolio</p>
+      </div>
+
+      <form class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Usuario</label>
+          <input #user type="text" 
+            class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+            placeholder="Tu usuario admin">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Contraseña</label>
+          <input #pass type="password" 
+            class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+            placeholder="••••••••">
+        </div>
+
+        <button 
+          (click)="intentarLogin(user.value, pass.value)"
+          type="button"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transform active:scale-95 transition duration-200">
+          Entrar al Panel
+        </button>
+      </form>
+
+      <p *ngIf="errorLogin" class="mt-4 text-center text-sm text-red-600 font-medium">
+        Credenciales incorrectas. Inténtalo de nuevo.
+      </p>
+
+      <div class="mt-8 text-center">
+        <a routerLink="/" class="text-sm text-gray-400 hover:text-blue-500 transition">
+          ← Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

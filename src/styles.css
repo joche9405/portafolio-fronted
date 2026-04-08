@@ -1,3 +1,121 @@
-/* You can add global styles to this file, and also import other style files */
+/* 1. EL COMPONENTE OCUPA TODA LA PANTALLA SIN DESBORDES */
+:host {
+  display: block;
+  height: 100vh;
+  width: 100%;
+  max-width: 100vw; /* 👈 Bloquea cualquier crecimiento horizontal fantasma */
+  overflow: hidden; 
+  margin: 0;
+  padding: 0;
+}
 
-@import 'tailwindcss';
+/* 2. RESET LOCAL (Compatibilidad con Tailwind) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 3. CONTENEDOR PRINCIPAL */
+.container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 🔥 Evita que aparezcan barras de scroll */
+}
+
+/* 4. HEADER (Se mantiene arriba sin empujar el contenido) */
+.header {
+  text-align: center;
+  padding: 20px;
+  background: #111;
+  color: white;
+  flex-shrink: 0; /* Impide que el header se achique */
+  z-index: 10;
+}
+
+/* 5. SPLIT PRINCIPAL (El corazón de los dos perfiles) */
+.split {
+  display: flex;
+  flex: 1; /* Ocupa todo el espacio restante */
+  width: 100%;
+  min-width: 100%; /* Forzamos a que no se contraiga */
+  overflow: hidden; 
+}
+
+/* 6. PANELES INDIVIDUALES */
+.panel {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Transición más suave */
+}
+
+/* 7. TEXTO DE LOS PERFILES */
+.panel h2 {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  z-index: 2;
+  text-align: center;
+  padding: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+  transition: transform 0.4s ease;
+}
+
+/* 8. FONDOS CON OVERLAY */
+.left {
+  background: url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789') center/cover no-repeat;
+}
+
+.right {
+  background: url('https://images.unsplash.com/photo-1518770660439-4636190af475') center/cover no-repeat;
+}
+
+/* Capa oscura sobre las imágenes */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  transition: background 0.5s ease;
+}
+
+/* 9. EFECTO HOVER (INTERACCIÓN) */
+/* Cuando pasas el mouse sobre el contenedor, los paneles se preparan */
+.split:hover .panel {
+  flex: 0.7;
+}
+
+/* El panel específico sobre el que estás crece más */
+.split .panel:hover {
+  flex: 1.3;
+}
+
+/* Aclara la imagen al pasar el mouse */
+.panel:hover::before {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* El texto crece un poco al seleccionar */
+.panel:hover h2 {
+  transform: scale(1.15);
+}
+
+/* 10. OPTIMIZACIÓN PARA MÓVILES */
+@media (max-width: 768px) {
+  .split {
+    flex-direction: column;
+  }
+  
+  .panel h2 {
+    font-size: 1.5rem;
+  }
+}
