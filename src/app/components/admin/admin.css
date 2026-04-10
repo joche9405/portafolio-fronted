@@ -479,7 +479,13 @@
   font-size: 0.85rem;
   font-style: italic;
 }
-
+.visitor-card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #fafafa;
+}
 /* ===== LOADING ===== */
 .loading-screen {
   min-height: 100vh;

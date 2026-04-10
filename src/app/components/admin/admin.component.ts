@@ -16,6 +16,7 @@ export class AdminComponent implements OnInit {
   projects: Project[] = [];
   visitorCount: number = 0;
   showProjectForm: boolean = false;
+visitors: any[] = [];
 
   perfilesDisponibles: string[] = ['software'];
   perfilSeleccionado: string = 'software';
@@ -29,6 +30,7 @@ export class AdminComponent implements OnInit {
     this.backend.countVisitors().subscribe(count => {
       this.visitorCount = count;
     });
+    this.cargarVisitors();
   }
 
   // =========================
@@ -275,5 +277,15 @@ updateProject(proj: any) {
     this.changeAdminPassword(oldP, newP);
   }
 }
+cargarVisitors() {
+  this.backend.getVisitors().subscribe({
+    next: (data) => {
+      console.log("VISITORS:", data);
+      this.visitors = data;
+    },
+    error: (err) => console.error("Error cargando visitors:", err)
+  });
+}
+
 
 }

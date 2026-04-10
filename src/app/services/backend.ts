@@ -142,4 +142,9 @@ updateProject(id: string, project: Project): Observable<Project> {
     headers: this.getAuthHeaders()
   });
 }
+getVisitors(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/visitors`, {
+    headers: this.getAuthHeaders()
+  });
+}
 }

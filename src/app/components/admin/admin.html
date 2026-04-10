@@ -183,6 +183,20 @@
       </div>
     </div>
   </div>
+  <h2>Visitantes</h2>
+
+<div *ngIf="visitors.length === 0">
+  No hay visitantes aún
+</div>
+
+<div *ngFor="let v of visitors" class="visitor-card">
+  <p><strong>Nombre:</strong> {{ v.nombre || 'Anónimo' }}</p>
+  <p><strong>Email:</strong> {{ v.email || 'No proporcionado' }}</p>
+  <p><strong>Mensaje:</strong> {{ v.mensaje || 'Sin mensaje' }}</p>
+  <p><strong>IP:</strong> {{ v.ip }}</p>
+  <p><strong>Navegador:</strong> {{ v.userAgent }}</p>
+  <p><strong>Fecha:</strong> {{ v.createdAt | date:'short' }}</p>
+</div>
 </ng-container>
 
 <ng-template #loadingTemplate>
