@@ -84,8 +84,8 @@
     <div class="form-group">
       <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" rows="4" required></textarea>
     </div>
-    <button (click)="enviarMensaje()" [disabled]="loading" class="btn-submit">
-      {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
+<button (click)="enviarMensaje()" class="btn-submit">
+        {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
     </button>
     <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
   </div>
