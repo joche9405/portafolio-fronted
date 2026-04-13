@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Backend, ProfileDTO, Project } from '../../services/backend';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { switchMap, of } from 'rxjs';
+import { switchMap, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-details',
@@ -12,7 +12,7 @@ import { switchMap, of } from 'rxjs';
   templateUrl: './profile-detail.component.html',
   styleUrls: ['./profile-detail.component.css']
 })
-export class ProfileDetailsComponent implements OnInit {
+export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   profile?: ProfileDTO;
   projects: Project[] = [];
@@ -22,6 +22,8 @@ export class ProfileDetailsComponent implements OnInit {
 
   loading: boolean = false;
   successMessage: string = '';
+
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
@@ -33,9 +35,8 @@ export class ProfileDetailsComponent implements OnInit {
     const tipo = this.route.snapshot.paramMap.get('tipo');
     if (!tipo) return;
 
-    this.backend.getProfile(tipo).pipe(
+    const sub = this.backend.getProfile(tipo).pipe(
       switchMap((profile) => {
-        console.log("PERFIL:", profile);
         this.profile = profile;
         this.cd.detectChanges();
         if (profile?.id) {
@@ -45,31 +46,34 @@ export class ProfileDetailsComponent implements OnInit {
       })
     ).subscribe({
       next: (projects: Project[]) => {
-        console.log("PROYECTOS:", projects);
         this.projects = projects;
         this.cd.detectChanges();
       },
       error: (err) => console.error("ERROR:", err)
     });
+
+    this.subscription.add(sub);
   }
 
   enviarMensaje(): void {
-    if (!this.nombre || !this.correo || !this.mensaje) {
+    if (this.loading) return;
+
+    if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
       this.successMessage = 'Por favor, completa todos los campos.';
       setTimeout(() => this.successMessage = '', 3000);
       return;
     }
 
     const visitor = {
-      nombre: this.nombre,
-      correo: this.correo,
-      mensaje: this.mensaje
+      nombre: this.nombre.trim(),
+      correo: this.correo.trim(),
+      mensaje: this.mensaje.trim()
     };
 
     this.loading = true;
     this.successMessage = '';
 
-    this.backend.saveVisitor(visitor).subscribe({
+    const sub = this.backend.saveVisitor(visitor).subscribe({
       next: () => {
         this.successMessage = 'Mensaje enviado correctamente.';
         this.nombre = '';
@@ -87,5 +91,11 @@ export class ProfileDetailsComponent implements OnInit {
         setTimeout(() => this.successMessage = '', 4000);
       }
     });
+
+    this.subscription.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -1,6 +1,6 @@
 <div *ngIf="profile as p; else loading" class="profile-container">
   
-  <!-- Header con efecto sutil -->
+  <!-- Header -->
   <div class="profile-header">
     <div class="avatar-wrapper">
       <img [src]="p.fotoUrl || 'https://ui-avatars.com/api/?background=0D9488&color=fff&name=' + p.nombre" 
@@ -17,13 +17,11 @@
     </div>
   </div>
 
-  <!-- Grid de dos columnas -->
+  <!-- Grid dos columnas -->
   <div class="profile-grid">
     
     <!-- Columna izquierda -->
     <div class="grid-col">
-      
-      <!-- Skills -->
       <div class="card">
         <h2>⚡ Habilidades</h2>
         <div class="skills-list">
@@ -31,7 +29,6 @@
         </div>
       </div>
 
-      <!-- Educación -->
       <div class="card">
         <h2>🎓 Educación</h2>
         <div *ngFor="let edu of p.educacion || []" class="entry">
@@ -48,8 +45,6 @@
 
     <!-- Columna derecha -->
     <div class="grid-col">
-      
-      <!-- Experiencia -->
       <div class="card">
         <h2>💼 Experiencia</h2>
         <div *ngFor="let exp of p.experiencia || []" class="entry">
@@ -63,7 +58,6 @@
         <div *ngIf="!p.experiencia?.length" class="empty-message">Sin experiencia registrada</div>
       </div>
 
-      <!-- Proyectos -->
       <div class="card">
         <h2>🚀 Proyectos destacados</h2>
         <div *ngFor="let proj of projects" class="project-item">
@@ -78,22 +72,23 @@
     </div>
   </div>
 
-  <!-- Sección de contacto (mejorada) -->
- <div class="contact-section">
-  <h2>📬 Contacto</h2>
-  <div class="form-group">
-    <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre">
+  <!-- Sección de contacto -->
+  <div class="contact-section">
+    <h2>📬 Contacto</h2>
+    <div class="form-group">
+      <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" required>
+    </div>
+    <div class="form-group">
+      <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo" required>
+    </div>
+    <div class="form-group">
+      <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" rows="4" required></textarea>
+    </div>
+    <button (click)="enviarMensaje()" [disabled]="loading" class="btn-submit">
+      {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
+    </button>
+    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
   </div>
-  <div class="form-group">
-    <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo">
-  </div>
-  <div class="form-group">
-    <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" rows="4"></textarea>
-  </div>
-  <button (click)="enviarMensaje()" [disabled]="loading" class="btn-submit">
-    {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
-  </button>
-  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
 </div>
 
 <ng-template #loading>
