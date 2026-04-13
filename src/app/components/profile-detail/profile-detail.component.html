@@ -1,6 +1,6 @@
 <div *ngIf="profile as p; else loading" class="profile-container">
   
-  <!-- Encabezado minimalista -->
+  <!-- Header con efecto sutil -->
   <div class="profile-header">
     <div class="avatar-wrapper">
       <img [src]="p.fotoUrl || 'https://ui-avatars.com/api/?background=0D9488&color=fff&name=' + p.nombre" 
@@ -25,7 +25,7 @@
       
       <!-- Skills -->
       <div class="card">
-        <h2>Habilidades</h2>
+        <h2>⚡ Habilidades</h2>
         <div class="skills-list">
           <span *ngFor="let skill of p.skills || []" class="skill">{{ skill }}</span>
         </div>
@@ -33,7 +33,7 @@
 
       <!-- Educación -->
       <div class="card">
-        <h2>Educación</h2>
+        <h2>🎓 Educación</h2>
         <div *ngFor="let edu of p.educacion || []" class="entry">
           <div class="entry-header">
             <h3>{{ edu.titulo }}</h3>
@@ -42,6 +42,7 @@
           <p class="institution">{{ edu.institucion }}</p>
           <p class="description">{{ edu.descripcion }}</p>
         </div>
+        <div *ngIf="!p.educacion?.length" class="empty-message">Sin educación registrada</div>
       </div>
     </div>
 
@@ -50,7 +51,7 @@
       
       <!-- Experiencia -->
       <div class="card">
-        <h2>Experiencia</h2>
+        <h2>💼 Experiencia</h2>
         <div *ngFor="let exp of p.experiencia || []" class="entry">
           <div class="entry-header">
             <h3>{{ exp.cargo }}</h3>
@@ -59,11 +60,12 @@
           <p class="company">{{ exp.empresa }}</p>
           <p class="description">{{ exp.descripcion }}</p>
         </div>
+        <div *ngIf="!p.experiencia?.length" class="empty-message">Sin experiencia registrada</div>
       </div>
 
       <!-- Proyectos -->
       <div class="card">
-        <h2>Proyectos destacados</h2>
+        <h2>🚀 Proyectos destacados</h2>
         <div *ngFor="let proj of projects" class="project-item">
           <h3>{{ proj.nombre }}</h3>
           <p>{{ proj.descripcion }}</p>
@@ -71,47 +73,32 @@
             Ver proyecto →
           </a>
         </div>
+        <div *ngIf="!projects.length" class="empty-message">No hay proyectos para mostrar</div>
       </div>
     </div>
   </div>
-</div>
-<div class="contact-section">
-  <h2>Contacto</h2>
 
-  <form (ngSubmit)="enviarMensaje()" #form="ngForm">
-
-    <input
-      type="text"
-      placeholder="Tu nombre"
-      [(ngModel)]="nombre"
-      name="nombre"
-      required
-    />
-
-    <input
-      type="email"
-      placeholder="Tu correo"
-      [(ngModel)]="correo"
-      name="correo"
-      required
-    />
-
-    <textarea
-      placeholder="Tu mensaje"
-      [(ngModel)]="mensaje"
-      name="mensaje"
-      rows="4"
-    ></textarea>
-
-    <button type="submit" [disabled]="loading">
-      {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
-    </button>
-
-  </form>
-
-  <p *ngIf="successMessage" class="success">
-    {{ successMessage }}
-  </p>
+  <!-- Sección de contacto (mejorada) -->
+  <div class="contact-section">
+    <h2>📬 Contacto</h2>
+    <form (ngSubmit)="enviarMensaje()" #form="ngForm">
+      <div class="form-group">
+        <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" name="nombre" required>
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo" name="correo" required>
+      </div>
+      <div class="form-group">
+        <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" name="mensaje" rows="4"></textarea>
+      </div>
+      <button type="submit" [disabled]="loading" class="btn-submit">
+        {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
+      </button>
+    </form>
+    <p *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </p>
+  </div>
 </div>
 
 <ng-template #loading>
