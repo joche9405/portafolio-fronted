@@ -79,26 +79,21 @@
   </div>
 
   <!-- Sección de contacto (mejorada) -->
-  <div class="contact-section">
-    <h2>📬 Contacto</h2>
-    <form (ngSubmit)="enviarMensaje(); $event.preventDefault()" #contactForm="ngForm">
+ <div class="contact-section">
+  <h2>📬 Contacto</h2>
   <div class="form-group">
-    <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" name="nombre" required>
+    <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre">
   </div>
   <div class="form-group">
-    <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo" name="correo" required>
+    <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo">
   </div>
   <div class="form-group">
-    <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" name="mensaje" rows="4" required></textarea>
+    <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" rows="4"></textarea>
   </div>
-  <button type="submit" [disabled]="loading" class="btn-submit">
+  <button (click)="enviarMensaje()" [disabled]="loading" class="btn-submit">
     {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
   </button>
-</form>
-    <p *ngIf="successMessage" class="success-message">
-      {{ successMessage }}
-    </p>
-  </div>
+  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
 </div>
 
 <ng-template #loading>
