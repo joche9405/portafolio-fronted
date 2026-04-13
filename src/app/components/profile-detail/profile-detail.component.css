@@ -220,6 +220,50 @@
   gap: 0.6rem;
   text-decoration: underline;
 }
+.contact-section {
+  margin-top: 40px;
+  padding: 25px;
+  border-radius: 12px;
+  background: #1e1e1e;
+  color: white;
+}
+
+.contact-section h2 {
+  margin-bottom: 15px;
+}
+
+.contact-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-section input,
+.contact-section textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.contact-section button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.contact-section button:hover {
+  background: #45a049;
+}
+
+.success {
+  margin-top: 10px;
+  color: #4CAF50;
+}
 
 /* ========== LOADING ========== */
 .loading-state {
@@ -244,6 +288,7 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 800px) {

@@ -43,8 +43,9 @@ export interface Project {
 }
 
 export interface VisitorDTO { 
-  name: string; 
+  nombre: string; 
   email?: string; 
+  mensaje: string;
 }
 
 @Injectable({

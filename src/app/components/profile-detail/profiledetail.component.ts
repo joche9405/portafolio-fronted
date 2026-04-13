@@ -1,13 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Backend, ProfileDTO, Project } from '../../services/backend'; 
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './profile-detail.component.html',
   styleUrls: ['./profile-detail.component.css']
 })
@@ -15,7 +16,12 @@ export class ProfileDetailsComponent implements OnInit {
 
   profile?: ProfileDTO;
   projects: Project[] = [];
+ nombre: string = '';
+  correo: string = '';
+  mensaje: string = '';
 
+  loading: boolean = false;
+  successMessage: string = '';
   constructor(
     private route: ActivatedRoute,
     private backend: Backend,
@@ -34,7 +40,6 @@ export class ProfileDetailsComponent implements OnInit {
 
         this.profile = profile;
 
-        // 🔥 FORZAR RENDER
         this.cd.detectChanges();
 
         if (profile?.id) {
@@ -50,10 +55,43 @@ export class ProfileDetailsComponent implements OnInit {
 
         this.projects = projects;
 
-        // 🔥 FORZAR RENDER TAMBIÉN AQUÍ
         this.cd.detectChanges();
       },
       error: (err) => console.error("ERROR:", err)
+    });
+  }
+
+    enviarMensaje() {
+
+    if (!this.nombre || !this.correo) {
+      alert("Nombre y correo son obligatorios");
+      return;
+    }
+
+    const visitor = {
+      nombre: this.nombre,
+      correo: this.correo,
+      mensaje: this.mensaje
+    };
+
+    this.loading = true;
+
+    this.backend.saveVisitor(visitor).subscribe({
+      next: () => {
+        this.successMessage = "Mensaje enviado correctamente";
+
+        
+        this.nombre = '';
+        this.correo = '';
+        this.mensaje = '';
+
+        this.loading = false;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error("Error enviando mensaje:", err);
+        this.loading = false;
+      }
     });
   }
 }

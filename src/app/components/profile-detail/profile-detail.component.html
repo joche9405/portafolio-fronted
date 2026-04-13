@@ -75,6 +75,44 @@
     </div>
   </div>
 </div>
+<div class="contact-section">
+  <h2>Contacto</h2>
+
+  <form (ngSubmit)="enviarMensaje()" #form="ngForm">
+
+    <input
+      type="text"
+      placeholder="Tu nombre"
+      [(ngModel)]="nombre"
+      name="nombre"
+      required
+    />
+
+    <input
+      type="email"
+      placeholder="Tu correo"
+      [(ngModel)]="correo"
+      name="correo"
+      required
+    />
+
+    <textarea
+      placeholder="Tu mensaje"
+      [(ngModel)]="mensaje"
+      name="mensaje"
+      rows="4"
+    ></textarea>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
+    </button>
+
+  </form>
+
+  <p *ngIf="successMessage" class="success">
+    {{ successMessage }}
+  </p>
+</div>
 
 <ng-template #loading>
   <div class="loading-state">
