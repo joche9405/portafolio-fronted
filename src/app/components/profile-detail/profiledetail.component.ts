@@ -34,13 +34,16 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.resetFormState();
+    console.log("🔥 COMPONENTE INICIADO");
+    console.log("🟡 LOADING INICIAL:", this.loading);
 
     const tipo = this.route.snapshot.paramMap.get('tipo');
     if (!tipo) return;
 
     const sub = this.backend.getProfile(tipo).pipe(
       switchMap((profile) => {
+        console.log("📌 PERFIL CARGADO:", profile);
+
         this.profile = profile;
         this.cd.detectChanges();
 
@@ -52,13 +55,12 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
       })
     ).subscribe({
       next: (projects: Project[]) => {
+        console.log("📦 PROYECTOS:", projects);
+
         this.projects = projects;
         this.cd.detectChanges();
       },
-      error: (err) => {
-        console.error("ERROR:", err);
-        this.loading = false; 
-      }
+      error: (err) => console.error("❌ ERROR:", err)
     });
 
     this.subscription.add(sub);
@@ -66,7 +68,12 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   enviarMensaje(): void {
 
-    if (this.loading) return;
+    console.log("🟢 CLICK ENVIAR");
+
+    if (this.loading) {
+      console.log("⛔ YA ESTÁ EN LOADING");
+      return;
+    }
 
     if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
       this.successMessage = 'Por favor, completa todos los campos.';
@@ -80,25 +87,34 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
       mensaje: this.mensaje.trim()
     };
 
+    console.log("📤 ENVIANDO VISITOR:", visitor);
+
     this.loading = true;
     this.successMessage = '';
-    this.cd.detectChanges(); 
+    this.cd.detectChanges();
 
     const timeoutId = setTimeout(() => {
       if (this.loading) {
+        console.log("⏰ TIMEOUT ACTIVADO");
+
         this.loading = false;
         this.successMessage = 'El servidor no responde. Inténtalo más tarde.';
         this.cd.detectChanges();
+
         setTimeout(() => this.successMessage = '', 4000);
       }
     }, 10000);
 
     const sub = this.backend.saveVisitor(visitor).subscribe({
       next: () => {
+        console.log("✅ MENSAJE ENVIADO");
+
         clearTimeout(timeoutId);
 
         this.successMessage = 'Mensaje enviado correctamente.';
-        this.resetForm(); 
+        this.nombre = '';
+        this.correo = '';
+        this.mensaje = '';
 
         this.loading = false;
         this.cd.detectChanges();
@@ -106,12 +122,13 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
         setTimeout(() => this.successMessage = '', 4000);
       },
       error: (err) => {
-        clearTimeout(timeoutId);
+        console.error('❌ ERROR ENVIANDO:', err);
 
-        console.error('Error enviando mensaje:', err);
+        clearTimeout(timeoutId);
 
         this.successMessage = 'Error al enviar. Inténtalo de nuevo.';
         this.loading = false;
+
         this.cd.detectChanges();
 
         setTimeout(() => this.successMessage = '', 4000);
@@ -119,19 +136,6 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.subscription.add(sub);
-  }
-
-  private resetForm(): void {
-    this.nombre = '';
-    this.correo = '';
-    this.mensaje = '';
-  }
-
-  private resetFormState(): void {
-    this.loading = false;
-    this.successMessage = '';
-    this.resetForm();
-    this.cd.detectChanges();
   }
 
   ngOnDestroy(): void {

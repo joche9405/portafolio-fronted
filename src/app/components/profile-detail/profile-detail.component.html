@@ -126,9 +126,10 @@
 
     <!-- BOTÓN -->
     <button 
-      type="submit"
+      type="button"
       class="btn-submit"
       [disabled]="loading"
+      (click)="enviarMensaje()"
     >
       <span *ngIf="!loading">Enviar mensaje</span>
 
