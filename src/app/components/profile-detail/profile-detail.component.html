@@ -74,23 +74,25 @@
 
   <!-- Sección de contacto (formulario) -->
   <div class="contact-section">
-    <h2>Déjame un mensaje y te contactaré</h2>
-    <div class="form-group">
-      <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" required>
-    </div>
-    <div class="form-group">
-      <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo" required>
-    </div>
-    <div class="form-group">
-      <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" rows="4" required></textarea>
-    </div>
-    <button (click)="enviarMensaje()" class="btn-submit">
-      {{ loading ? 'Enviando...' : 'Enviar mensaje' }}
-    </button>
-    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+  <h2>Déjame un mensaje y te contactaré</h2>
+  <div class="form-group">
+    <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" required>
   </div>
+  <div class="form-group">
+    <input type="email" placeholder="Tu correo electrónico" [(ngModel)]="correo" required>
+  </div>
+  <div class="form-group">
+    <textarea placeholder="Tu mensaje..." [(ngModel)]="mensaje" rows="4" required></textarea>
+  </div>
+  <button (click)="enviarMensaje()" [disabled]="loading" class="btn-submit">
+    <span *ngIf="!loading">Enviar mensaje</span>
+    <span *ngIf="loading" class="btn-loader"></span>
+    <span *ngIf="loading">Enviando...</span>
+  </button>
+  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+</div>
 
-  <!-- NUEVA SECCIÓN: Redes sociales y contacto directo (como pie de página) -->
+  <!-- Redes sociales y contacto directo  -->
   <div class="social-footer">
     
     <div class="social-links">

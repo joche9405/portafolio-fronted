@@ -297,6 +297,10 @@
   transition: all 0.2s;
   width: 100%;
   box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .btn-submit:hover:not(:disabled) {
@@ -310,6 +314,21 @@
   cursor: not-allowed;
 }
 
+.btn-loader {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .success-message {
   margin-top: 1rem;
   color: #0d9488;
@@ -319,6 +338,23 @@
   padding: 0.7rem;
   border-radius: 1rem;
   font-size: 0.85rem;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.7rem;
+  margin-top: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+.error-message-global {
+  margin-top: 1rem;
+  color: #dc2626;
+  background: #fef2f2;
+  padding: 0.7rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  text-align: center;
 }
 
 /* ========== NUEVA SECCIÓN: REDES SOCIALES (pie de página) ========== */
