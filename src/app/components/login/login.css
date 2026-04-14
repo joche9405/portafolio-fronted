@@ -7,65 +7,107 @@
 }
 
 /* Fondo con gradiente suave */
-.bg-gray-900 {
+.min-h-screen {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
 /* Tarjeta principal */
 .max-w-md {
+  max-width: 28rem;
+  width: 100%;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .max-w-md:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.35);
+  transform: translateY(-5px);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
 }
 
 /* Barra superior azul */
 .bg-blue-600 {
+  height: 0.25rem;
   background: linear-gradient(90deg, #2563eb, #1e40af);
-  height: 4px;
+  width: 100%;
+}
+
+/* Contenido interno */
+.p-8 {
+  padding: 2rem;
 }
 
 /* Títulos */
 .text-3xl {
+  font-size: 1.875rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #1e293b, #334155);
+  background: linear-gradient(135deg, #0f172a, #334155);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  margin-bottom: 0.5rem;
 }
 
 .text-gray-500 {
   color: #64748b;
   font-weight: 400;
+  margin-top: 0.5rem;
+}
+
+/* Espaciado del formulario */
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
 }
 
 /* Inputs */
 input {
-  transition: all 0.2s ease;
-  border-color: #e2e8f0;
-  background-color: #ffffff;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
   font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
 }
 
 input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-  outline: none;
 }
 
 input::placeholder {
-  color: #94a3b8;
-  font-weight: 400;
+  color: #9ca3af;
 }
 
-/* Botón */
+/* Botón (sin disabled, cursor pointer siempre) */
 button {
-  transition: all 0.2s ease;
+  width: 100%;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-weight: 700;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
   border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
@@ -79,31 +121,42 @@ button:active {
   transform: scale(0.97);
 }
 
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Mensaje de error */
 .text-red-600 {
   color: #dc2626;
-  background: #fef2f2;
+  background-color: #fef2f2;
   display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   font-size: 0.8rem;
   font-weight: 500;
+  margin-top: 1rem;
+  text-align: center;
+  width: 100%;
   animation: fadeInUp 0.3s ease;
 }
 
 /* Enlace volver */
 a {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
   transition: all 0.2s;
-  font-weight: 500;
+  display: inline-block;
 }
 
 a:hover {
   color: #3b82f6;
-  transform: translateX(-2px);
-  display: inline-block;
+  transform: translateX(-3px);
 }
 
-/* Animación para el error */
+/* Animación */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -120,12 +173,13 @@ a:hover {
   .p-8 {
     padding: 1.5rem;
   }
-  
   .text-3xl {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
-  
   button {
-    padding: 0.75rem;
+    padding: 0.6rem;
+  }
+  input {
+    padding: 0.6rem;
   }
 }
