@@ -23,14 +23,14 @@
     <!-- Columna izquierda -->
     <div class="grid-col">
       <div class="card">
-        <h2>⚡ Habilidades</h2>
+        <h2> Habilidades</h2>
         <div class="skills-list">
           <span *ngFor="let skill of p.skills || []" class="skill">{{ skill }}</span>
         </div>
       </div>
 
       <div class="card">
-        <h2>🎓 Educación</h2>
+        <h2> Educación</h2>
         <div *ngFor="let edu of p.educacion || []" class="entry">
           <div class="entry-header">
             <h3>{{ edu.titulo }}</h3>
@@ -46,7 +46,7 @@
     <!-- Columna derecha -->
     <div class="grid-col">
       <div class="card">
-        <h2>💼 Experiencia</h2>
+        <h2> Experiencia</h2>
         <div *ngFor="let exp of p.experiencia || []" class="entry">
           <div class="entry-header">
             <h3>{{ exp.cargo }}</h3>
@@ -59,7 +59,7 @@
       </div>
 
       <div class="card">
-        <h2>🚀 Proyectos destacados</h2>
+        <h2> Proyectos destacados</h2>
         <div *ngFor="let proj of projects" class="project-item">
           <h3>{{ proj.nombre }}</h3>
           <p>{{ proj.descripcion }}</p>
@@ -74,7 +74,7 @@
 
   <!-- Sección de contacto (formulario) -->
   <div class="contact-section">
-    <h2>📬 Contacto</h2>
+    <h2>Déjame un mensaje y te contactaré</h2>
     <div class="form-group">
       <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" required>
     </div>
