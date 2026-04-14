@@ -55,7 +55,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
     this.subscription.add(sub);
   }
 
- enviarMensaje(): void {
+enviarMensaje(): void {
   if (this.loading) return;
 
   if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
@@ -73,14 +73,18 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   this.loading = true;
   this.successMessage = '';
 
-  const sub = this.backend.saveVisitor(visitor).pipe(
-    timeout(10000),
-    catchError(err => {
-      console.error('Error detallado:', err);
-      return throwError(() => err);
-    })
-  ).subscribe({
+  const timeoutId = setTimeout(() => {
+    if (this.loading) {
+      this.loading = false;
+      this.successMessage = 'El servidor no responde. Inténtalo más tarde.';
+      this.cd.detectChanges();
+      setTimeout(() => this.successMessage = '', 4000);
+    }
+  }, 10000);
+
+  const sub = this.backend.saveVisitor(visitor).subscribe({
     next: () => {
+      clearTimeout(timeoutId);
       this.successMessage = 'Mensaje enviado correctamente.';
       this.nombre = '';
       this.correo = '';
@@ -90,12 +94,9 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
       setTimeout(() => this.successMessage = '', 4000);
     },
     error: (err) => {
+      clearTimeout(timeoutId);
       console.error('Error enviando mensaje:', err);
-      let errorMsg = 'Error al enviar. Inténtalo de nuevo.';
-      if (err.name === 'TimeoutError') {
-        errorMsg = 'El servidor no responde. Inténtalo más tarde.';
-      }
-      this.successMessage = errorMsg;
+      this.successMessage = 'Error al enviar. Inténtalo de nuevo.';
       this.loading = false;
       this.cd.detectChanges();
       setTimeout(() => this.successMessage = '', 4000);
