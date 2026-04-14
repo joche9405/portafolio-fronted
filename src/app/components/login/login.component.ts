@@ -25,10 +25,8 @@ export class LoginComponent {
     this.backend.loginAdmin(user, pass).subscribe({
       next: (token: string) => {
         console.log('Login exitoso');
-        // 1. Guardamos el JWT en el LocalStorage
         localStorage.setItem('auth_token', token);
         
-        // 2. Redirigimos al panel de administrador
         this.router.navigate(['/admin']);
       },
       error: (err) => {
