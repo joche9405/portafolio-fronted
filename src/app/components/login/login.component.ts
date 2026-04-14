@@ -7,7 +7,8 @@ import { Backend } from '../../services/backend';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './login.html'
+  templateUrl: './login.html',
+  styles: './login.css'
 })
 export class LoginComponent {
   errorLogin: boolean = false;
@@ -18,7 +19,7 @@ export class LoginComponent {
   ) {}
 
   intentarLogin(user: string, pass: string) {
-    this.errorLogin = false; // Resetear error
+    this.errorLogin = false; 
 
     if (!user || !pass) return;
 
