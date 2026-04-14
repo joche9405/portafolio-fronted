@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Backend, ProfileDTO, Project } from '../../services/backend';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { switchMap, of, Subscription, throwError } from 'rxjs';
-import { timeout, catchError } from 'rxjs/operators';
+import { switchMap, of, Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-profile-details',
   standalone: true,
@@ -16,6 +16,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   profile?: ProfileDTO;
   projects: Project[] = [];
+
   nombre: string = '';
   correo: string = '';
   mensaje: string = '';
@@ -32,6 +33,9 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+
+    this.resetFormState();
+
     const tipo = this.route.snapshot.paramMap.get('tipo');
     if (!tipo) return;
 
@@ -39,9 +43,11 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
       switchMap((profile) => {
         this.profile = profile;
         this.cd.detectChanges();
+
         if (profile?.id) {
           return this.backend.getProjects(profile.id);
         }
+
         return of([]);
       })
     ).subscribe({
@@ -49,62 +55,84 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
         this.projects = projects;
         this.cd.detectChanges();
       },
-      error: (err) => console.error("ERROR:", err)
+      error: (err) => {
+        console.error("ERROR:", err);
+        this.loading = false; 
+      }
     });
 
     this.subscription.add(sub);
   }
 
-enviarMensaje(): void {
-  if (this.loading) return;
+  enviarMensaje(): void {
 
-  if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
-    this.successMessage = 'Por favor, completa todos los campos.';
-    setTimeout(() => this.successMessage = '', 3000);
-    return;
+    if (this.loading) return;
+
+    if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
+      this.successMessage = 'Por favor, completa todos los campos.';
+      setTimeout(() => this.successMessage = '', 3000);
+      return;
+    }
+
+    const visitor = {
+      nombre: this.nombre.trim(),
+      correo: this.correo.trim(),
+      mensaje: this.mensaje.trim()
+    };
+
+    this.loading = true;
+    this.successMessage = '';
+    this.cd.detectChanges(); 
+
+    const timeoutId = setTimeout(() => {
+      if (this.loading) {
+        this.loading = false;
+        this.successMessage = 'El servidor no responde. Inténtalo más tarde.';
+        this.cd.detectChanges();
+        setTimeout(() => this.successMessage = '', 4000);
+      }
+    }, 10000);
+
+    const sub = this.backend.saveVisitor(visitor).subscribe({
+      next: () => {
+        clearTimeout(timeoutId);
+
+        this.successMessage = 'Mensaje enviado correctamente.';
+        this.resetForm(); 
+
+        this.loading = false;
+        this.cd.detectChanges();
+
+        setTimeout(() => this.successMessage = '', 4000);
+      },
+      error: (err) => {
+        clearTimeout(timeoutId);
+
+        console.error('Error enviando mensaje:', err);
+
+        this.successMessage = 'Error al enviar. Inténtalo de nuevo.';
+        this.loading = false;
+        this.cd.detectChanges();
+
+        setTimeout(() => this.successMessage = '', 4000);
+      }
+    });
+
+    this.subscription.add(sub);
   }
 
-  const visitor = {
-    nombre: this.nombre.trim(),
-    correo: this.correo.trim(),
-    mensaje: this.mensaje.trim()
-  };
+  private resetForm(): void {
+    this.nombre = '';
+    this.correo = '';
+    this.mensaje = '';
+  }
 
-  this.loading = true;
-  this.successMessage = '';
-
-  const timeoutId = setTimeout(() => {
-    if (this.loading) {
-      this.loading = false;
-      this.successMessage = 'El servidor no responde. Inténtalo más tarde.';
-      this.cd.detectChanges();
-      setTimeout(() => this.successMessage = '', 4000);
-    }
-  }, 10000);
-
-  const sub = this.backend.saveVisitor(visitor).subscribe({
-    next: () => {
-      clearTimeout(timeoutId);
-      this.successMessage = 'Mensaje enviado correctamente.';
-      this.nombre = '';
-      this.correo = '';
-      this.mensaje = '';
-      this.loading = false;
-      this.cd.detectChanges();
-      setTimeout(() => this.successMessage = '', 4000);
-    },
-    error: (err) => {
-      clearTimeout(timeoutId);
-      console.error('Error enviando mensaje:', err);
-      this.successMessage = 'Error al enviar. Inténtalo de nuevo.';
-      this.loading = false;
-      this.cd.detectChanges();
-      setTimeout(() => this.successMessage = '', 4000);
-    }
-  });
-
-  this.subscription.add(sub);
-}
+  private resetFormState(): void {
+    this.loading = false;
+    this.successMessage = '';
+    this.resetForm();
+    this.cd.detectChanges();
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
