@@ -8,7 +8,7 @@ import { Backend } from '../../services/backend';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './login.html',
-  styles: './login.css'
+  styleUrls: ['./login.css']
 })
 export class LoginComponent {
   errorLogin: boolean = false;
