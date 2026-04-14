@@ -128,8 +128,7 @@
     <button 
       type="submit"
       class="btn-submit"
-      [class.loading]="loading"
-      [disabled]="form.invalid || loading"
+      [disabled]="loading"
     >
       <span *ngIf="!loading">Enviar mensaje</span>
 
