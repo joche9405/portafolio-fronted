@@ -67,76 +67,67 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   enviarMensaje(): void {
+  console.log("🟢 CLICK ENVIAR");
 
-    console.log("🟢 CLICK ENVIAR");
-
-    if (this.loading) {
-      console.log("⛔ YA ESTÁ EN LOADING");
-      return;
-    }
-
-    if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
-      this.successMessage = 'Por favor, completa todos los campos.';
-      setTimeout(() => this.successMessage = '', 3000);
-      return;
-    }
-
-    const visitor = {
-      nombre: this.nombre.trim(),
-      correo: this.correo.trim(),
-      mensaje: this.mensaje.trim()
-    };
-
-    console.log("📤 ENVIANDO VISITOR:", visitor);
-
-    this.loading = true;
-    this.successMessage = '';
-    this.cd.detectChanges();
-
-    const timeoutId = setTimeout(() => {
-      if (this.loading) {
-        console.log("⏰ TIMEOUT ACTIVADO");
-
-        this.loading = false;
-        this.successMessage = 'El servidor no responde. Inténtalo más tarde.';
-        this.cd.detectChanges();
-
-        setTimeout(() => this.successMessage = '', 4000);
-      }
-    }, 10000);
-
-    const sub = this.backend.saveVisitor(visitor).subscribe({
-      next: () => {
-        console.log("✅ MENSAJE ENVIADO");
-
-        clearTimeout(timeoutId);
-
-        this.successMessage = 'Mensaje enviado correctamente.';
-        this.nombre = '';
-        this.correo = '';
-        this.mensaje = '';
-
-        this.loading = false;
-        this.cd.detectChanges();
-
-        setTimeout(() => this.successMessage = '', 4000);
-      },
-      error: (err) => {
-        console.error('❌ ERROR ENVIANDO:', err);
-
-        clearTimeout(timeoutId);
-
-        this.successMessage = 'Error al enviar. Inténtalo de nuevo.';
-        this.loading = false;
-
-        this.cd.detectChanges();
-
-        setTimeout(() => this.successMessage = '', 4000);
-      }
-    });
-
-    this.subscription.add(sub);
+  if (this.loading) {
+    console.log("⛔ YA ESTÁ EN LOADING");
+    return;
   }
+
+  // Validación básica
+  if (!this.nombre.trim() || !this.correo.trim() || !this.mensaje.trim()) {
+    this.successMessage = 'Por favor, completa todos los campos.';
+    this.cd.markForCheck(); // Uso de markForCheck para estabilidad
+    setTimeout(() => {
+      this.successMessage = '';
+      this.cd.markForCheck();
+    }, 3000);
+    return;
+  }
+
+  const visitor = {
+    nombre: this.nombre.trim(),
+    correo: this.correo.trim(),
+    mensaje: this.mensaje.trim()
+  };
+
+  this.loading = true;
+  this.successMessage = '';
+  this.cd.detectChanges(); // Forzamos aquí para que el botón cambie a "Enviando"
+
+  // Timeout de seguridad
+  const timeoutId = setTimeout(() => {
+    if (this.loading) {
+      this.loading = false;
+      this.successMessage = 'El servidor no responde. Inténtalo más tarde.';
+      this.cd.detectChanges();
+      setTimeout(() => { this.successMessage = ''; this.cd.detectChanges(); }, 4000);
+    }
+  }, 10000);
+
+  const sub = this.backend.saveVisitor(visitor).subscribe({
+    next: () => {
+      clearTimeout(timeoutId);
+      this.successMessage = 'Mensaje enviado correctamente.';
+      this.nombre = '';
+      this.correo = '';
+      this.mensaje = '';
+      this.loading = false; // Reset loading
+      this.cd.detectChanges();
+      setTimeout(() => { this.successMessage = ''; this.cd.detectChanges(); }, 4000);
+    },
+    error: (err) => {
+      clearTimeout(timeoutId);
+      console.error('❌ ERROR:', err);
+      this.successMessage = 'Error al enviar. Inténtalo de nuevo.';
+      this.loading = false; // Reset loading siempre
+      this.cd.detectChanges();
+      setTimeout(() => { this.successMessage = ''; this.cd.detectChanges(); }, 4000);
+    }
+  });
+
+  this.subscription.add(sub);
+}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

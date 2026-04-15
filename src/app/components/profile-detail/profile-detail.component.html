@@ -125,17 +125,17 @@
     </div>
 
     <!-- BOTÓN -->
-    <button 
-      type="button"
-      class="btn-submit"
-      [disabled]="loading"
-      (click)="enviarMensaje()"
-    >
-      <span *ngIf="!loading">Enviar mensaje</span>
-
-      <span *ngIf="loading" class="btn-loader"></span>
-      <span *ngIf="loading">Enviando...</span>
-    </button>
+   <button 
+    type="submit" 
+    class="btn-submit" 
+    [disabled]="loading || form.invalid"
+  >
+    <span *ngIf="!loading">Enviar mensaje</span>
+    
+    <ng-container *ngIf="loading">
+      <span class="btn-loader"></span>
+<span style="margin-left: 8px;">Enviando...</span>    </ng-container>
+  </button>
 
   </form>
 
