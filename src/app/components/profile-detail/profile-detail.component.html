@@ -1,4 +1,4 @@
-<div *ngIf="profile as p; else loading" class="profile-container">
+<div *ngIf="profile as p; else loadingPorifle" class="profile-container">
   
   <!-- Header -->
   <div class="profile-header">
@@ -134,7 +134,8 @@
     
     <ng-container *ngIf="loading">
       <span class="btn-loader"></span>
-<span style="margin-left: 8px;">Enviando...</span>    </ng-container>
+      <span style="margin-left: 8px;">Enviando...</span>  
+  </ng-container>
   </button>
 
   </form>
@@ -188,7 +189,7 @@
 
 </div>
 
-<ng-template #loading>
+<ng-template #loadingProfile>
   <div class="loading-state">
     <div class="loader"></div>
     <p>Cargando perfil... puede tardar un par de minutos por lanzamiento gratuito</p>
