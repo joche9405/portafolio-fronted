@@ -22,6 +22,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   mensaje: string = '';
 
   loading: boolean = false;
+  
   successMessage: string = '';
 
   private subscription: Subscription = new Subscription();
@@ -36,7 +37,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
     console.log("🔥 COMPONENTE INICIADO");
     console.log("🟡 LOADING INICIAL:", this.loading);
-
+this.cd.detectChanges();
     const tipo = this.route.snapshot.paramMap.get('tipo');
     if (!tipo) return;
 
